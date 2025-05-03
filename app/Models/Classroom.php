@@ -1,31 +1,25 @@
 <?php
 
 namespace App\Models;
+use Illuminate\Support\Facades\DB;
 
 class Classroom
 {
-    // Fake database
-    protected static $data = [
-        'students' => [
-            ['name' => 'John Doe', 'age' => 20 , 'id' => 1],
-            ['name' => 'Jane Smith', 'age' => 22, 'id' => 2],
-            ['name' => 'Sam Brown', 'age' => 19, 'id' => 3],
-        ],
-        'teachers' => [
-            ['name' => 'KSDsfsf', 'subject' => 'Math', 'id' => 1],
-            ['name' => 'Ms. Johnson', 'subject' => 'Science', 'id' => 2],
-            ['name' => 'Mrs. Brown', 'subject' => 'English', 'id' => 3]
-        ]
-    ];
 
     public static function getStudents()
     {
-        return self::$data['students'];
+        // return DB::select('SELECT * FROM students');
+        return DB::table('students')->get('*');
     }
 
     public static function getTeachers()
     {
-        return self::$data['teachers'];
+        return DB::table(table: 'teachers')->get('*');
+    }
+
+    public static function getTeacherById($id)
+    {
+        return DB::table('teachers')->where('id', $id)->first();
     }
 
     // get student by id
