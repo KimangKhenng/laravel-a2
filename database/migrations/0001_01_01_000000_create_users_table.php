@@ -11,6 +11,7 @@ return new class extends Migration
      */
     public function up(): void
     {
+        // Can be deleted
         Schema::create('users', function (Blueprint $table) {
             $table->id();
             $table->string('name');
@@ -21,6 +22,7 @@ return new class extends Migration
             $table->timestamps();
         });
 
+        // Can be deleted
         Schema::create('password_reset_tokens', function (Blueprint $table) {
             $table->string('email')->primary();
             $table->string('token');

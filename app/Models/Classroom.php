@@ -1,13 +1,14 @@
 <?php
 
 namespace App\Models;
+use Illuminate\Support\Facades\DB;
 
 class Classroom
 {
     // Fake database
     protected static $data = [
         'students' => [
-            ['name' => 'John Doe', 'age' => 20 , 'id' => 1],
+            ['name' => 'John Doe', 'age' => 20, 'id' => 1],
             ['name' => 'Jane Smith', 'age' => 22, 'id' => 2],
             ['name' => 'Sam Brown', 'age' => 19, 'id' => 3],
         ],
@@ -25,7 +26,7 @@ class Classroom
 
     public static function getTeachers()
     {
-        return self::$data['teachers'];
+        return DB::table('teacher')->get('*');
     }
 
     // get student by id
