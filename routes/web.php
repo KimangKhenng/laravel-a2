@@ -2,6 +2,9 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Models\Classroom;
+use App\Models\User;
+use Firebase\JWT\JWT;
+use Firebase\JWT\Key;
 
 Route::get('/', function () {
     return view('welcome');
@@ -33,4 +36,52 @@ Route::patch('/teachers/{id}', function ($id) {
     // Edit a teacher by id
     // search for the teacher by id
     $body = request()->all();
+});
+
+Route::post('/login', function () {
+    // Get username and password from request body
+    $body = request()->all();
+    $email = $body['email'];
+    $password = $body['password'];
+    // Check if the user exists
+    $user = User::where('email', $email)->first();
+    if (!$user) {
+        return response()->json(['message' => 'User not found'], 404);
+    }
+    // Check if the password is correct
+    if (!password_verify($password, $user->password)) {
+        return response()->json(['message' => 'Invalid password'], 401);
+    }
+    // Generate a JWT token
+    // Create payload
+    $payload = [
+        'sub' => $user->id,
+        'iat' => time(),
+        'email' => $user->email,
+        'name' => $user->name,
+        'exp' => time() + 60 * 60,
+    ];
+    // Encode the payload
+    $key = env('JWT_SECRET');
+    $jwt = JWT::encode($payload, $key, 'HS256');
+    // Return the token
+    return response()->json(['access_token' => $jwt]);
+});
+
+Route::post('/register', function () {
+    // Get username and password from request body
+    $body = request()->all();
+    // Create a new user
+    $user = new User();
+    $user->name = $body['name'];
+    $user->email = $body['email'];
+    $user->password = bcrypt($body['password']);
+    $user->save();
+    return response()->json(['message' => 'User created', 'data' => $user]);
+});
+
+Route::get('/users', function () {
+    // Get all users
+    $users = User::all();
+    return response()->json($users);
 });

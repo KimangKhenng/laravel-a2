@@ -45,4 +45,9 @@ class User extends Authenticatable
             'password' => 'hashed',
         ];
     }
+
+    public function getUser(string $email): ?User
+    {
+        return User::where('email', $email)->first();
+    }
 }
